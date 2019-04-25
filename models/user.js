@@ -40,4 +40,18 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User',userSchema);
 
+function validateUser(user){
+    const schema = {
+        firstName: joi.string().min(5).max(20).required(),
+        lastName: joi.string().min(5).max(20).required(),
+        accountType: joi.string().valid('seller','admin','buyer','agent').required(),
+        phoneNumber: joi.number(),
+        profilePic: joi.string(),
+        email: joi.string().min(10).max(255).required().email(),
+        password: joi.string().min(5).max(1024).required()
+    }
+    return joi.validate(user,schema);
+}
+
+
 exports.User = User;
