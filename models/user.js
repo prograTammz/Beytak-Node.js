@@ -20,8 +20,14 @@ const userSchema = new mongoose.Schema({
         required: true,
         enum: ['seller','admin','buyer','agent']
     },
-    phoneNumber:Number,
-    profilePic:String,
+    phoneNumber:{
+        type: Number,
+        required: String
+    },
+    profilePic:{
+        type: String,
+        required: true
+    },
     email:{
         type:String,
         required: true,
