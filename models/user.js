@@ -2,6 +2,8 @@ const jwt = require('jsonwebtoken');
 const joi = require('joi');
 const mongoose = require('mongoose');
 
+const ObjectId = mongoose.Schema.Types.ObjectId;
+
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
@@ -41,6 +43,7 @@ const userSchema = new mongoose.Schema({
         minlength: 5,
         maxlength: 1024
     },
+    favorites: [ObjectId],
     isAdmin: Boolean
 });
 
