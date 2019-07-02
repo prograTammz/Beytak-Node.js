@@ -24,6 +24,11 @@ const PublicationSchema = new mongoose.Schema({
         type:String,
         required: true,
         minlength: 200,
+    },
+    cateogry:{
+        type: String,
+        required: true,
+        enum: ['News','Article']
     }
 });
 
@@ -34,6 +39,7 @@ function publicationValidation(publication){
         publicationDate: Joi.date().required(),
         editDate: Joi.date(),
         publicationBody: Joi.string().minlength(200).required(),
+        cateogry: Joi.string().valid('News','Article').required()
     }
 
     return Joi.validate(publication, tempSchema);
