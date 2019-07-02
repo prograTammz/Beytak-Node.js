@@ -34,7 +34,8 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    
+    long: Number,
+    lat: Number,
     size:{
         type: Number,
         required: true
@@ -103,6 +104,8 @@ function validateProperty(prop){
         category: Joi.string().valid('Commerical','Residential','Land').required(),
         postDate: Joi.date().required(),
         type: Joi.string().required(),
+        long: Joi.number(),
+        lat: Joi.number(),
         size: numberRequired,
         livingCount: numberRequired,
         bathCount: numberRequired,
