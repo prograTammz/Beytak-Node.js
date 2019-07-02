@@ -1,5 +1,6 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
+const city = require('./city');
 
 const propertySchema = new mongoose.Schema({
     title:{
@@ -13,20 +14,9 @@ const propertySchema = new mongoose.Schema({
         required: true
     },
     city:{
-        type: new mongoose.Schema({
-            name:{
-                type: String,
-                required: true,
-                minlength: 5,
-                maxlength: 20
-            },
-            governorate:{
-                type: String,
-                required: true,
-                minlength: 5,
-                maxlength: 20
-            }
-        })
+        type: mongoose.schema.Types.ObjectId,
+        ref: 'City',
+        required: true
     },
     //Category: Like commerical or residental
     category:{
@@ -44,8 +34,7 @@ const propertySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    longtiude: Number,
-    latitude: Number,
+    
     size:{
         type: Number,
         required: true
@@ -83,7 +72,11 @@ const propertySchema = new mongoose.Schema({
         required: true
     },
     photos: [String],
-    sellerId: mongoose.Schema.Types.ObjectId,
+    seller: {
+        type: mongoose.Schema.ObjectId,
+        ref:'User',
+        required: true,
+    },
     tags: [String],
     statId: {
         type: Number,
@@ -98,3 +91,34 @@ const propertySchema = new mongoose.Schema({
     this.priceSq = this.price/this.size;
     next();
 })
+
+const Property = mongoose.model('Property',propertySchema);
+
+function validateProperty(prop){
+    const numberRequired = Joi.number().required();
+    const schema = {
+        title: Joi.string().min(20).max(60).required(),
+        description: Joi.string().required(),
+        city: Joi.objectId().required(),
+        category: Joi.string().valid('Commerical','Residential','Land').required(),
+        postDate: Joi.date().required(),
+        type: Joi.string().required(),
+        size: numberRequired,
+        livingCount: numberRequired,
+        bathCount: numberRequired,
+        price: numberRequired,
+        cash: Joi.boolean().required(),
+        installs: Joi.boolean().required(),
+        yearlyInterest: Joi.number(),
+        minPeriod: Joi.number(),
+        maxPeriod: Joi.number(),
+        photos: Joi.array().items(Joi.string()),
+        tags: Joi.array().items(Joi.string()),
+        seller: Joi.objectId().required(),
+        statId: Joi.number().required().min(0).max(4).required()
+    }
+    return Joi.validate(prop, schema);
+}
+
+exports.Property = Property;
+exports.validate = validateProperty;
